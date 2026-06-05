@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: analytics_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: analytics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sample_data/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d analytics"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: analytics_backend
+    environment:
+      APP_NAME: Conversational Analytics API
+      APP_ENV: development
+      SQL_LLM_PROVIDER: openrouter
+      SQL_LLM_BASE_URL: https://openrouter.ai/api/v1
+      SQL_LLM_MODEL: qwen/qwen-2.5-coder-32b-instruct
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      INSIGHT_LLM_PROVIDER: groq
+      INSIGHT_LLM_BASE_URL: https://api.groq.com/openai/v1
+      INSIGHT_LLM_MODEL: openai/gpt-oss-120b
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      LLM_USE_JSON_SCHEMA: "true"
+      OPENROUTER_APP_URL: http://localhost:3000
+      OPENROUTER_APP_NAME: Conversational Analytics MVP
+      DATABASE_URL: postgresql+psycopg://analytics_ro:analytics_ro@db:5432/analytics
+      WAREHOUSE_DIALECT: postgres
+      WAREHOUSE_SCHEMA: public
+      ALLOWED_TABLES: sales_summary,orders,customers,revenue_by_region
+      MAX_RESULT_ROWS: 500
+      SQL_QUERY_TIMEOUT_MS: 15000
+      CORS_ORIGINS: http://localhost:3000
+      ENABLE_SEMANTIC_CACHE: "true"
+      SEMANTIC_CACHE_TTL_SECONDS: 900
+      BUSINESS_RULES: Revenue is in USD. Keep answers concise and business-friendly.
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: analytics_frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

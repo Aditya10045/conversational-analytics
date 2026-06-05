@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 96%;
+    --foreground: 216 33% 12%;
+    --card: 0 0% 100%;
+    --border: 210 19% 86%;
+    --accent: 19 92% 56%;
+    --muted: 210 27% 93%;
+  }
+
+  .dark {
+    --background: 221 40% 10%;
+    --foreground: 30 20% 96%;
+    --card: 223 35% 14%;
+    --border: 221 23% 25%;
+    --accent: 24 95% 63%;
+    --muted: 220 24% 20%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground;
+    background:
+      radial-gradient(60rem 40rem at 5% -10%, rgba(255, 122, 26, 0.17), transparent),
+      radial-gradient(42rem 30rem at 90% 10%, rgba(38, 116, 255, 0.18), transparent),
+      linear-gradient(to bottom right, hsl(var(--background)), hsl(var(--background)));
+  }
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, Menlo, Consolas, monospace;
+}

@@ -1,0 +1,30 @@
+{
+  "name": "conversational-analytics-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.453.0",
+    "next": "^16.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.3"
+  }
+}
