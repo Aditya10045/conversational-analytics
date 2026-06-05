@@ -116,7 +116,6 @@ conversational-analytics/
 ├── sample_data/
 │   └── init.sql
 │
-├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
